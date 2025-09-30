@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+    <title>Exemple</title>
+</head>
+<body>
+<h1>Liste des items</h1>
+<ul>
+    <% users.forEach(user => { %>
+    <li><%= user.name %></li>
+    <% }); %>
+</ul>
+<form action="/add" method="POST">
+
+    <input type="text" name="username" placeholder="enter your name ...">
+    <input type="email" name="email" placeholder="enter your email ...">
+    <input type="password" name="password" placeholder="enter your password">
+        <button type="submit">Ajouter</button>
+
+
+</form>
+</body>
+</html>
