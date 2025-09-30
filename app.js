@@ -26,6 +26,8 @@ connectDB();
 const routes = require('./routes/routes');
 app.use('/', routes); // Monte les routes à la racine (ou changez le prefixe si besoin)
 app.use('/add' , routes);
+app.use('/quiz' , routes);
+// app.use('/quiz/questions' , routes);
 
 // Gestion des erreurs 404
 app.use((req, res, next) => {
