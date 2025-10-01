@@ -1,5 +1,6 @@
 const BaseController = require('../core/BaseController');
 const UserModel = require('../models/UserModel');
+
 const bcrypt = require("bcrypt");
 class AuthController extends BaseController{
  async postUser(req, res) {
@@ -12,16 +13,13 @@ class AuthController extends BaseController{
       return res.status(400).send("Cet email est déjà utilisé !");
     }
 
-
-    if (existingUser) {
-      return res.status(400).send("Cet email est déjà utilisé !");
-    }
+  
     const hashedPassword = await bcrypt.hash(userInfo.password, saltRounds);
     userInfo['password'] = hashedPassword;
 
     await UserModel.create(userInfo);
 
-    res.redirect('/');
+    res.redirect('/login');
   } catch (error) {
     this.handleError(error, res);
   }
@@ -44,6 +42,12 @@ class AuthController extends BaseController{
       return res.status(401).send("Mot de passe incorrect");
     }
 
+      req.session.user = {
+        id: user.id,
+        email: user.email,
+        name: user.name
+      };
+
     res.send("Connexion réussie !");
     
   } catch (error) {
@@ -53,6 +57,4 @@ class AuthController extends BaseController{
 
 
     }
-
-
     module.exports = AuthController;

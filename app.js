@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require("express-session");
 const path = require('path');
 const dotenv = require('dotenv');
 const { connectDB } = require('./config/database');
@@ -11,6 +12,16 @@ const port = process.env.PORT;
 // Middleware pour parser les requêtes POST (body)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+//session
+app.use(express.json());
+
+app.use(session({
+  secret: "FouadSalah@QuizzApp#123456", 
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } 
+}));
 
 // Configuration des vues EJS
 app.set('view engine', 'ejs');
@@ -36,3 +47,4 @@ app.use((req, res, next) => {
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
+
