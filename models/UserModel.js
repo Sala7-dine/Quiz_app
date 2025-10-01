@@ -19,6 +19,18 @@ class UserModel {
             throw err;
         }
     }
+
+        static async findByEmail(email) {
+        try {
+            const [rows] = await pool.query(
+                "SELECT * FROM users WHERE email = ? LIMIT 1",
+                [email]
+            );
+            return rows[0];
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 module.exports = UserModel;
