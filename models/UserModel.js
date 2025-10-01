@@ -1,6 +1,7 @@
 const { pool } = require('../config/database');
 
-class UsereModel {
+
+class UserModel {
     static async getAll() {
         try {
             const [rows] = await pool.query("SELECT * FROM users");
@@ -20,4 +21,4 @@ class UsereModel {
     }
 }
 
-module.exports = UsereModel;
+module.exports = UserModel;

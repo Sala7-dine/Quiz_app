@@ -11,8 +11,13 @@ router.get('/', async (req, res) => {
 
 });
 
+// router.post('/add',async (req, res) => {
+//     const controller = new HomeController(req, res);
+//     await controller.postUser(req, res);
+// });
+
 router.post('/add',async (req, res) => {
-    const controller = new HomeController(req, res);
+    const controller = new AuthController(req, res);
     await controller.postUser(req, res);
 });
 

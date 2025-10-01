@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Sala7-dine/Quiz_app#readme",
   "description": "",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
