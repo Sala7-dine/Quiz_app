@@ -1,23 +1,19 @@
-<!DOCTYPE html>
+`<!DOCTYPE html>
 <html lang="fr">
     <head>
     <title>Exemple</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<h1>Liste des items</h1>
-<ul>
-    <% users.forEach(user => { %>
-    <li><%= user.name %></li>
-    <% }); %>
-</ul>
-<form action="/add" method="POST">
 
-    <input type="text" name="username" placeholder="enter your name ...">
-    <input type="email" name="email" placeholder="enter your email ...">
-    <input type="password" name="password" placeholder="enter your password">
-    <button type="submit">Ajouter</button>
+<div style="text-align: center; margin: 20px 0;">
+    <a href="/quiz" style="display: inline-block; margin: 10px; padding: 15px 30px; background: hsl(222.2 47.4% 11.2%); color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+        🎮 Jouer au Quiz
+    </a>
+    <a href="/dashboard" style="display: inline-block; margin: 10px; padding: 15px 30px; background: hsl(45 93% 47%); color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+        📊 Dashboard
+    </a>
+</div>
 
-</form>
 </body>
 </html>
