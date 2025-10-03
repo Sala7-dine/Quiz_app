@@ -14,14 +14,14 @@
     <div class="container">
         <p class="title">Sign In</p>
 
-      
+      <form action="/connexion" method="POST">
         <!-- Email -->
         <div class="div-email">
             <span class="span-email">Entrez Votre Email</span>
             <span class="material-symbols-outlined icon-left">
                 mail
             </span>
-            <input class="input-email" type="email" placeholder="Exemple: Fouad@gmail.com">
+            <input class="input-email" name="email" type="email" placeholder="Exemple: Fouad@gmail.com">
             <p class="error-input-email">Ce Email Déjà Utilisé</p>
         </div>
 
@@ -34,7 +34,7 @@
                 lock
             </span>
 
-            <input class="input-password" type="password" placeholder="●●●●●●●●●●">
+            <input class="input-password" name="password" type="password" placeholder="●●●●●●●●●●">
 
             <!-- visibility icon right -->
             <span class="material-symbols-outlined icon-right">
@@ -47,6 +47,8 @@
         </div>
 
         <button class="btn-creer-compte">Connexion</button>
+      </form>
+        
 
         <p class="p-question-avoir-compte">
             Vous N'avez pas Un Compte?
