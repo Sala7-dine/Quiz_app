@@ -3,8 +3,9 @@ const router = express.Router();
 const HomeController = require('../controllers/HomeController');
 const QuizController = require("../controllers/QuizController");
 const AuthController = require("../controllers/AuthController");
-const { requireAuth, optionalAuth } = require('../middleware/auth');
+const { requireAuth, optionalAuth, requireAdmin } = require('../middleware/auth');
 const QuestionController = require('../controllers/QuestionController');
+const AdminController = require('../controllers/AdminController');
 
 
 router.get('/', async (req, res) => {
@@ -90,9 +91,15 @@ router.get('/quiz', requireAuth, async (req, res) => {
         throw err;
     }
 });
-router.get('/admin/create', async (req, res) => {
+router.get('/admin/create', requireAdmin, async (req, res) => {
     const controller = new QuestionController(req, res);
     await controller.showCreate(req, res);
+});
+
+// Admin dashboard
+router.get('/admin/dashboard', requireAdmin, async (req, res) => {
+    const controller = new AdminController(req, res);
+    await controller.dashboard(req, res);
 });
 
 

@@ -35,7 +35,8 @@ class AuthController extends BaseController {
             req.session.user = {
                 id: newUser.id,
                 email: newUser.email,
-                name: newUser.name.toLowerCase().trim()
+                name: newUser.name.toLowerCase().trim(),
+                role: (newUser.role || 'user')
             };
 
             res.json({ 
@@ -65,7 +66,8 @@ class AuthController extends BaseController {
             req.session.user = {
                 id: user.id,
                 email: user.email,
-                name: user.name.toLowerCase().trim()
+                name: user.name.toLowerCase().trim(),
+                role: (user.role || 'user')
             };
 
             res.json({ 

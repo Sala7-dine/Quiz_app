@@ -6,7 +6,8 @@ create table users
     id    int auto_increment primary key,
     name  varchar(255) not null,
     email varchar(255) not null,
-    password varchar(255) not null
+    password varchar(255) not null,
+    role varchar(20) not null default 'user'
 );
 
 create table themes
@@ -67,5 +68,7 @@ create table questions
 create index idx_questions_theme
     on questions (theme_id);
 
+
+ALTER TABLE users ADD COLUMN role VARCHAR(20) NOT NULL DEFAULT 'user';
 
 

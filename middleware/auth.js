@@ -14,7 +14,20 @@ const optionalAuth = (req, res, next) => {
     next();
 };
 
+function requireAdmin(req, res, next) {
+    if (req.session && req.session.user && req.session.user.role === 'admin') {
+        return next();
+    }
+    // If authenticated but not admin, show 403
+    if (req.session && req.session.user) {
+        return res.status(403).send('Accès refusé: Administrateur requis');
+    }
+    // Not authenticated, redirect to login
+    return res.redirect('/auth/login');
+}
+
 module.exports = {
     requireAuth,
-    optionalAuth
+    optionalAuth,
+    requireAdmin
 };

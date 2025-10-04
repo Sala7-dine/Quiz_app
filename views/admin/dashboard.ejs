@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .admin-container { max-width: 1000px; margin: 30px auto; padding: 20px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0; }
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; }
+    .card h3 { margin: 0 0 8px; font-size: 14px; color: #6b7280; }
+    .card .value { font-size: 28px; font-weight: 700; }
+    .toolbar { display: flex; gap: 10px; margin: 10px 0 20px; }
+    .btn { display: inline-block; padding: 10px 16px; border-radius: 6px; border: 1px solid #1f2937; background: #111827; color: #fff; text-decoration: none; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #e5e7eb; }
+    th { color: #6b7280; font-weight: 600; font-size: 14px; }
+  </style>
+</head>
+<body>
+<header class="header">
+  <h1 class="logo">Admin</h1>
+  <nav class="nav">
+    <span>Bonjour <%= user?.name %> (<%= user?.role %>)</span>
+    <a href="/dashboard" class="dashboard-link">Retour à l'espace joueur</a>
+  </nav>
+</header>
+
+<main class="admin-container">
+  <h2>Tableau de bord</h2>
+
+  <div class="toolbar">
+    <a class="btn" href="/admin/create">➕ Créer des questions / thématiques</a>
+  </div>
+
+  <section class="cards">
+    <div class="card">
+      <h3>Utilisateurs</h3>
+      <div class="value"><%= stats.users %></div>
+    </div>
+    <div class="card">
+      <h3>Thématiques</h3>
+      <div class="value"><%= stats.themes %></div>
+    </div>
+    <div class="card">
+      <h3>Questions</h3>
+      <div class="value"><%= stats.questions %></div>
+    </div>
+    <div class="card">
+      <h3>Parties jouées</h3>
+      <div class="value"><%= stats.games %></div>
+    </div>
+  </section>
+
+  <section>
+    <h3>Joueurs les plus actifs</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Pseudo</th>
+          <th>Parties</th>
+          <th>Taux de réussite moyen</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% if ((stats.topPlayers || []).length === 0) { %>
+        <tr><td colspan="3">Aucune donnée pour le moment</td></tr>
+      <% } else { %>
+        <% stats.topPlayers.forEach(row => { %>
+          <tr>
+            <td><%= row.pseudo %></td>
+            <td><%= row.games_played %></td>
+            <td><%= Math.round(row.success_rate || 0) %>%</td>
+          </tr>
+        <% }) %>
+      <% } %>
+      </tbody>
+    </table>
+  </section>
+</main>
+</body>
+</html>
