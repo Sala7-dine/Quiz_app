@@ -54,7 +54,7 @@ create table questions
     type           varchar(50) default 'qcm'             null,
     question       text                                  not null,
     options        json                                  not null,
-    correct_answer json                                  not null,
+    correct_answer int                                  not null,
     explanation    text                                  null,
     multi_question tinyint(1)  default 0                 null,
     created_at     timestamp   default CURRENT_TIMESTAMP null,
