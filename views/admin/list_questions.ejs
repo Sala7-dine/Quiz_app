@@ -8,20 +8,18 @@
 <body>
   <h1>Liste des Questions</h1>
 
-  <!-- اختيار الـ theme -->
+  <!-- Choisir le thème -->
   <form method="GET" action="/admin/questions">
     <label for="theme">Choisir un thème :</label>
     <select name="theme_id" id="theme" onchange="this.form.submit()">
       <option value="">-- Sélectionnez un thème --</option>
       <% themes.forEach(theme => { %>
-        <option value="<%= theme.id %>" <%= selectedTheme == theme.id ? 'selected' : '' %>>
-          <%= theme.titre %>
-        </option>
+        <option value="<%= theme.id %>" <%= selectedTheme == theme.id ? 'selected' : '' %>><%= theme.titre %></option>
       <% }) %>
     </select>
   </form>
 
-  <!-- عرض الأسئلة -->
+  <!-- Liste des questions -->
   <% if (questions.length > 0) { %>
     <table border="1" cellpadding="8" cellspacing="0">
       <thead>
@@ -30,6 +28,7 @@
           <th>Question</th>
           <th>Options</th>
           <th>Bonne Réponse</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -40,23 +39,19 @@
             <td>
               <% 
                 let opts = [];
-                try {
-                  opts = JSON.parse(q.options);
-                } catch (err) {
-                  opts = [q.options]; // fallback إذا ماكانتش JSON
-                }
+                try { opts = JSON.parse(q.options); } 
+                catch (err) { opts = [q.options]; }
               %>
               <% opts.forEach((opt, i) => { %>
                 <div><%= i + 1 %>. <%= opt %></div>
               <% }) %>
             </td>
             <td><%= q.correct_answer %></td>
+            <td>
+              <a href="/admin/questions/edit/<%= q.id %>" style="color: blue;">Modifier</a> | 
+              <a href="/admin/questions/delete/<%= q.id %>" onclick="return confirm('Voulez-vous vraiment supprimer cette question ?')" style="color: red;">Supprimer</a>
+            </td>
           </tr>
-          <td>
-  <a href="/admin/questions/delete/<%= q.id %>" 
-     onclick="return confirm('Voulez-vous vraiment supprimer cette question ?')"
-     style="color: red;">Supprimer</a>
-</td>
         <% }) %>
       </tbody>
     </table>

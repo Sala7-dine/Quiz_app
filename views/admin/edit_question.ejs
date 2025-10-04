@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier la Question</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <style>
+        .question-form {
+            max-width: 600px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+        .form-group input[type="text"], 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .options-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .option input[type="text"] {
+            margin-left: 8px;
+            flex: 1;
+        }
+        button {
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <h1>Modifier la Question</h1>
+        </header>
+
+        <main>
+            <form class="question-form" action="/admin/questions/update/<%= question.id %>" method="POST">
+                <!-- Question -->
+                <div class="form-group">
+                    <label for="question">Question</label>
+                    <textarea id="question" name="question" required><%= question.question %></textarea>
+                </div>
+
+                <!-- Thème -->
+                <div class="form-group">
+                    <label for="themeSelect">Choisir un thème existant</label>
+                    <select id="themeSelect" name="theme_id">
+                        <option value="">-- Sélectionnez un thème --</option>
+                        <% themes.forEach(theme => { %>
+                            <option value="<%= theme.id %>" <%= theme.id === question.theme_id ? 'selected' : '' %>><%= theme.titre %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="newTheme">Ou ajouter un nouveau thème</label>
+                    <input type="text" id="newTheme" name="newTheme" placeholder="Nouvelle catégorie">
+                </div>
+
+                <!-- Options -->
+                <div class="form-group options-group">
+                    <label>Options</label>
+                    <% for (let i = 0; i < 4; i++) { %>
+                        <div class="option">
+                            <input type="radio" name="correct" value="<%= i+1 %>" <%= question.correct_answer === i+1 ? 'checked' : '' %> required>
+                            <input type="text" name="option<%= i+1 %>" value="<%= options[i] ? options[i] : '' %>" required>
+                        </div>
+                    <% } %>
+                </div>
+
+                <button type="submit">Mettre à jour</button>
+            </form>
+        </main>
+    </div>
+</body>
+</html>

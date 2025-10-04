@@ -45,4 +45,16 @@ router.get('/admin/questions/delete/:id', async (req, res) => {
     const controller = new QuestionController(req, res);
     await controller.deleteQuestion(req, res);
 });
+
+
+router.get('/admin/questions/edit/:id', async (req, res) => {
+    const controller = new QuestionController(req, res);
+    await controller.showEdit(req, res);
+});
+
+router.post('/admin/questions/update/:id', async (req, res) => {
+    const controller = new QuestionController(req, res);
+    await controller.updateQuestion(req, res);
+});
+
 module.exports = router;
