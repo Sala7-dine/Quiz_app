@@ -2,7 +2,6 @@ const express = require('express');
 const session = require("express-session");
 const path = require('path');
 const dotenv = require('dotenv');
-const session = require('express-session');
 const { connectDB } = require('./config/database');
 
 dotenv.config();
@@ -39,7 +38,7 @@ connectDB();
 const routes = require('./routes/routes');
 app.use('/', routes); // Monte les routes à la racine (ou changez le prefixe si besoin)
 // app.use('/add' , routes);
-// app.use('/quiz' , routes);
+app.use('/quiz' , routes);
 // app.use('/quiz/questions' , routes);
 
 // Gestion des erreurs 404

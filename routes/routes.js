@@ -3,7 +3,7 @@ const router = express.Router();
 const HomeController = require('../controllers/HomeController');
 const QuizController = require("../controllers/QuizController");
 const AuthController = require("../controllers/AuthController");
-const AuthController = require('../controllers/AuthController');
+
 
 
 router.get('/', async (req, res) => {
@@ -88,9 +88,9 @@ router.get('/quiz/leaderboard', async (req, res) => {
     }
 });
 
-router.get('/dashboard', (req, res) => {
-    res.render('dashboard');
-});
+// router.get('/dashboard', (req, res) => {
+//     res.render('dashboard');
+// });
 
 
 module.exports = router;
