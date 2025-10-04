@@ -15,7 +15,8 @@ class UserModel {
         try {
             // Normaliser le nom : minuscules et sans espaces superflus
             const normalizedName = userInfo.username.toLowerCase().trim();
-            await pool.query("INSERT INTO users (name , email , password) VALUES (? , ? , ?)", [normalizedName, userInfo.email, userInfo.password]);
+            const role = (userInfo.role && ['admin','user'].includes(userInfo.role)) ? userInfo.role : 'user';
+            await pool.query("INSERT INTO users (name , email , password, role) VALUES (? , ? , ? , ?)", [normalizedName, userInfo.email, userInfo.password, role]);
             return { success: true };
         } catch (err) {
             throw err;
