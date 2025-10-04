@@ -112,6 +112,18 @@ class QuestionModel {
       throw err;
     }
   }
+
+  static async delete(id) {
+    try {
+        const [result] = await pool.query(
+            "DELETE FROM questions WHERE id = ?",
+            [id]
+        );
+        return result.affectedRows > 0;
+    } catch (err) {
+        throw err;
+    }
+}
 }
 
 module.exports = QuestionModel;

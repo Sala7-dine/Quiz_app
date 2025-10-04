@@ -52,6 +52,11 @@
             </td>
             <td><%= q.correct_answer %></td>
           </tr>
+          <td>
+  <a href="/admin/questions/delete/<%= q.id %>" 
+     onclick="return confirm('Voulez-vous vraiment supprimer cette question ?')"
+     style="color: red;">Supprimer</a>
+</td>
         <% }) %>
       </tbody>
     </table>

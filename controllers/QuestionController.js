@@ -51,6 +51,21 @@ class QuestionController extends BaseController {
             this.handleError(error);
         }
     }
+async deleteQuestion(req, res) {
+    try {
+        const { id } = req.params;
+        const deleted = await QuestionModel.delete(id);
+
+        if (!deleted) {
+            return res.status(404).send("Question non trouvée");
+        }
+
+        res.redirect("/admin/questions");
+    } catch (error) {
+        this.handleError(res, error, "Erreur lors de la suppression de la question");
+    }
+}
+    
 
 }
 

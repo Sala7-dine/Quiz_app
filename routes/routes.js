@@ -41,4 +41,8 @@ router.get('/admin/questions', async (req, res) => {
     await controller.listQuestions(req, res);
 });
 
+router.get('/admin/questions/delete/:id', async (req, res) => {
+    const controller = new QuestionController(req, res);
+    await controller.deleteQuestion(req, res);
+});
 module.exports = router;
