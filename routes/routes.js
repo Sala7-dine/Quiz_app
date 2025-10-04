@@ -4,7 +4,7 @@ const HomeController = require('../controllers/HomeController');
 const QuizController = require("../controllers/QuizController");
 const AuthController = require("../controllers/AuthController");
 const { requireAuth, optionalAuth } = require('../middleware/auth');
-
+const QuestionController = require('../controllers/QuestionController');
 
 
 router.get('/', async (req, res) => {
@@ -13,6 +13,12 @@ router.get('/', async (req, res) => {
     await controller.getUsers(req, res);
 
 });
+
+router.post('/add',async (req, res) => {
+    const controller = new AuthController(req, res);
+    controller.showLoginPage(req, res);
+});
+
 
 // ========== Routes d'Authentification (publiques) ==========
 
@@ -84,6 +90,10 @@ router.get('/quiz', requireAuth, async (req, res) => {
         throw err;
     }
 });
+router.get('/admin/create', async (req, res) => {
+    const controller = new QuestionController(req, res);
+    await controller.showCreate(req, res);
+});
 
 
 // Routes protégées pour les résultats de quiz
@@ -121,4 +131,17 @@ router.get('/quiz/leaderboard', async (req, res) => {
 // });
 
 
+router.post('/save-question', async (req, res) => {
+    const controller = new QuestionController(req, res);
+    await controller.postQuestion(req, res);
+});
+router.get('/admin/questions', async (req, res) => {
+    const controller = new QuestionController(req, res);
+    await controller.listQuestions(req, res);
+});
+
+router.get('/admin/questions/delete/:id', async (req, res) => {
+    const controller = new QuestionController(req, res);
+    await controller.deleteQuestion(req, res);
+});
 module.exports = router;
