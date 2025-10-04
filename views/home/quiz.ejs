@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSQuizStarter - Quiz Interactif</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="header">
+    <h1 class="logo">JSQuizStarter</h1>
+    <nav class="nav">
+        <a href="/dashboard" class="dashboard-link">📊 Dashboard</a>
+        <button onclick="logout()" style="margin-left: 10px; padding: 8px 16px; background: hsl(0 72% 51%); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Déconnexion</button>
+    </nav>
+</header>
+
+<main class="main-content">
+
+    <div class="cards-container">
+
+        <% if(themes) { %>
+
+            <% themes.forEach(theme => { %>
+
+                <div class="card">
+                    <h3> <%= theme.titre %> </h3>
+                    <p> <%= theme.description %> </p>
+                    <form action="/quiz/questions" method="GET">
+                        <button id="btn-choice" type="submit" name="choice" class="btn-choice" value="<%= theme.id %>">Choisir</button>
+                    </form>
+                </div>
+
+            <% }); %>
+
+        <% } %>
+
+    </div>
+
+    <div id="result" class="result" style="display: none;">
+        <h2>🎉 Quiz Terminé !</h2>
+
+        <div class="result-summary">
+            <div class="result-stat">
+                <div class="result-stat-value" id="score">0</div>
+                <div class="result-stat-label">Score</div>
+            </div>
+            <div class="result-stat">
+                <div class="result-stat-value" id="globalTime">00:00</div>
+                <div class="result-stat-label">Temps total</div>
+            </div>
+            <div class="result-stat">
+                <div class="result-stat-value" id="percentage">0%</div>
+                <div class="result-stat-label">Réussite</div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn" onclick="location.reload()">Rejouer</button>
+            <a href="/dashboard" class="btn">Voir le Dashboard</a>
+        </div>
+
+        <h3 style="margin: 32px 0 16px 0; font-size: 18px; font-weight: 600;">Détail des réponses :</h3>
+    </div>
+</main>
+
+    <script>
+        // Vérifier l'authentification au chargement de la page
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch('/auth/check');
+                const result = await response.json();
+                
+                if (!result.success || !result.user) {
+                    // L'utilisateur n'est pas connecté, rediriger vers login
+                    alert('Vous devez être connecté pour accéder au quiz');
+                    window.location.href = '/auth/login';
+                }
+            } catch (error) {
+                console.error('Erreur de vérification d\'authentification:', error);
+                window.location.href = '/auth/login';
+            }
+        });
+
+        // Fonction de déconnexion
+        async function logout() {
+            try {
+                const response = await fetch('/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    alert('Déconnexion réussie');
+                    window.location.href = '/';
+                } else {
+                    alert('Erreur lors de la déconnexion');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la déconnexion:', error);
+                alert('Erreur de connexion');
+            }
+        }
+    </script>
+
+</body>
+</html>

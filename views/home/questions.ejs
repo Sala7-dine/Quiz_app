@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSQuizStarter - Quiz Interactif</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="header">
+    <h1 class="logo">JSQuizStarter</h1>
+    <nav class="nav">
+        <span id="user-info" style="margin-right: 15px; color: hsl(215.4 16.3% 46.9%);"></span>
+        <a href="/dashboard" class="dashboard-link">📊 Dashboard</a>
+        <button onclick="logout()" style="margin-left: 10px; padding: 8px 16px; background: hsl(0 72% 51%); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Déconnexion</button>
+    </nav>
+</header>
+
+<main class="main-content">
+    <% let data = []; %>
+    <% let actualQuiz = 0; %>
+
+    <div class="quiz-container">
+        <% if (questions && questions.length > 0) { %>
+        <div class="quiz-header">
+            <h1 class="quiz-title">Quiz en cours</h1>
+            <div class="quiz-meta">
+                <div class="timer">⏱️ <span id="timer">00:00</span></div>
+                <div class="question-counter">Question <span id="current-question">1</span> / <%= questions.length %></div>
+            </div>
+        </div>
+        <main>
+            <div>
+                <h2 id="question" class="question-text">
+                    <%= questions[actualQuiz].question %>
+                </h2>
+            </div>
+            <div class="answers" id="answers">
+                <% questions[actualQuiz].options.forEach((ops, i) => { %>
+                    <label class="answer-option">
+                        <input type='radio' name="answer" value="<%= i %>">
+                        <%= ops %>
+                    </label>
+                <% }); %>
+            </div>
+        </main>
+        <% } else { %>
+        <div style="text-align: center; padding: 40px;">
+            <h2>Aucune question disponible</h2>
+            <p>Veuillez sélectionner un thème avec des questions.</p>
+            <a href="/quiz" style="color: #007bff; text-decoration: none;">← Retour aux thèmes</a>
+        </div>
+        <% } %>
+
+        <footer>
+            <button id="next-btn" class="btn">Suivant</button>
+
+
+        </footer>
+    </div>
+
+
+    </div>
+</main>
+
+
+<script>
+    let actualQuiz = <%= actualQuiz %>;
+    const questions = <%- JSON.stringify(questions) %>;
+    const themeId = <%= themeId %>; // ID du thème passé depuis le serveur
+    let answersQuiz = [];
+    
+    console.log('=== INITIALISATION QUIZ ===');
+    console.log('Theme ID:', themeId);
+    console.log('Nombre de questions:', questions.length);
+
+    const questionEl = document.getElementById("question");
+    const answersEl = document.getElementById("answers");
+    const nextBtn = document.getElementById("next-btn");
+    const quizContainer = document.querySelector('.quiz-container');
+    const resultEl = document.getElementById('result');
+
+    // Afficher les informations de l'utilisateur
+    async function displayUserInfo() {
+        try {
+            const response = await fetch('/auth/check');
+            const result = await response.json();
+            const userInfoEl = document.getElementById('user-info');
+            
+            if (result.success && result.user) {
+                userInfoEl.textContent = `👤 ${result.user.name}`;
+            } else {
+                const pseudo = localStorage.getItem('quiz_pseudo');
+                if (pseudo) {
+                    userInfoEl.textContent = `👤 ${pseudo} (invité)`;
+                }
+            }
+        } catch (error) {
+            console.log('Impossible de récupérer les informations utilisateur');
+        }
+    }
+
+    // Appeler la fonction au chargement de la page
+    displayUserInfo();
+
+    function loadQuiz() {
+
+        document.getElementById("current-question").textContent = (actualQuiz + 1).toString();
+
+        const q = questions[actualQuiz];
+        if (!q) return;
+
+        questionEl.textContent = q.question;
+        answersEl.innerHTML = q.options.map((opt, i) => `
+                <label class="answer-option">
+                  <input type="radio" name="answer" value="${i}">
+                  ${opt}
+                </label>
+              `).join("");
+    }
+
+    async function endQuiz() {
+        // Calculer le score réel
+        let score = 0;
+        answersQuiz.forEach((answer) => {
+            if (answer.choix === answer.correctAnswer) {
+                score++;
+            }
+        });
+        
+        // Afficher un message de fin
+        const percentage = Math.round((score / questions.length) * 100);
+        
+        // Sauvegarder le résultat
+        await saveGameResult(score, questions.length, 0, answersQuiz);
+        
+        window.location.href = "/dashboard";
+
+    }
+
+    nextBtn.addEventListener("click", () => {
+
+        if (actualQuiz < questions.length) {
+            const choice = document.querySelector('input[name="answer"]:checked');
+            if (!choice) {
+                alert('Veuillez sélectionner une réponse.');
+                return;
+            }
+
+            const chosenIndex = parseInt(choice.value, 10);
+            const correctIndex = questions[actualQuiz].correctAnswer;
+
+            const chosenLabel = choice.closest("label");
+            const correctLabel = answersEl.querySelector(`input[value="${correctIndex}"]`)?.closest("label");
+
+            if (chosenIndex === correctIndex) {
+                chosenLabel.classList.add("correct");
+            } else {
+                chosenLabel.classList.add("incorrect");
+                if (correctLabel) correctLabel.classList.add("correct");
+            }
+
+            saveAnswer(chosenIndex);
+
+            setTimeout(() => {
+                actualQuiz++;
+                if (actualQuiz < questions.length) {
+                    loadQuiz();
+                } else {
+                    nextBtn.style.display = 'none';
+                    endQuiz();
+                }
+            }, 1200);
+        } else {
+            nextBtn.style.display = 'none';
+            endQuiz();
+        }
+    });
+
+    function saveAnswer(choice) {
+        answersQuiz.push({
+            question: questions[actualQuiz].question,
+            choix: choice,
+            options: questions[actualQuiz].options,
+            correctAnswer: questions[actualQuiz].correctAnswer,
+            multiQuestion: questions[actualQuiz].multiQuestion || false,
+        });
+    }
+
+    async function saveGameResult(finalScore, totalQuestions, totalTime, answers) {
+        try {
+            // Le themeId est déjà défini en haut du script (passé depuis le serveur)
+            console.log('\n=== PRÉPARATION SAUVEGARDE ===');
+            console.log('Theme ID:', themeId);
+            console.log('Score:', finalScore, '/', totalQuestions);
+            
+            // Récupérer le nom de l'utilisateur authentifié
+            let pseudo = null;
+            
+            // Vérifier si l'utilisateur est connecté (obligatoire maintenant)
+            try {
+                const authResponse = await fetch('/auth/check');
+                const authResult = await authResponse.json();
+                if (authResult.success && authResult.user) {
+                    pseudo = authResult.user.name;
+                } else {
+                    // L'utilisateur n'est pas connecté, rediriger vers login
+                    window.location.href = '/auth/login';
+                    return;
+                }
+            } catch (authError) {
+                console.error('Erreur d\'authentification:', authError);
+                window.location.href = '/auth/login';
+                return;
+            }
+
+            const gameData = {
+                pseudo: pseudo,
+                theme_id: themeId,
+                score: finalScore,
+                total_questions: totalQuestions,
+                time_spent: totalTime,
+                answers: answers
+            };
+            
+            console.log('Données à envoyer:');
+            console.log('  - Pseudo:', gameData.pseudo);
+            console.log('  - Theme ID:', gameData.theme_id, '(Type:', typeof gameData.theme_id, ')');
+            console.log('  - Score:', gameData.score, '/', gameData.total_questions);
+            console.log('  - Answers:', gameData.answers.length);
+
+            const response = await fetch('/quiz/save-result', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(gameData),
+                keepalive: true
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                console.log('✅ Sauvegarde réussie!');
+            } else {
+                console.error('❌ Erreur de sauvegarde:', result.message);
+            }
+            console.log('===============================\n');
+
+        } catch (error) {
+            console.error('❌ ERREUR lors de la sauvegarde du score:', error);
+        }
+    }
+
+    // Fonction de déconnexion
+    async function logout() {
+        try {
+            const response = await fetch('/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                window.location.href = '/';
+            } else {
+                alert('Erreur lors de la déconnexion');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la déconnexion:', error);
+        }
+    }
+
+</script>
+
+
+<script src="/main.js"></script>
+</body>
+</html>

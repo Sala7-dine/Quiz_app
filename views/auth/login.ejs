@@ -14,15 +14,15 @@
     <div class="container">
         <p class="title">Sign In</p>
 
-      <form action="/connexion" method="POST">
+      <form id="loginForm">
         <!-- Email -->
         <div class="div-email">
             <span class="span-email">Entrez Votre Email</span>
             <span class="material-symbols-outlined icon-left">
                 mail
             </span>
-            <input class="input-email" name="email" type="email" placeholder="Exemple: Fouad@gmail.com">
-            <p class="error-input-email">Ce Email Déjà Utilisé</p>
+            <input class="input-email" name="email" type="email" placeholder="Exemple: Fouad@gmail.com" required>
+            <p class="error-input-email" style="display:none; color:red;">Ce Email Déjà Utilisé</p>
         </div>
 
         <!-- Password -->
@@ -34,20 +34,58 @@
                 lock
             </span>
 
-            <input class="input-password" name="password" type="password" placeholder="●●●●●●●●●●">
+            <input class="input-password" name="password" type="password" placeholder="●●●●●●●●●●" required>
 
             <!-- visibility icon right -->
             <span class="material-symbols-outlined icon-right">
                 visibility
             </span>
 
-            <p class="div-erreur-password">
-            Le Mot De Pass Ou Bien Email Sont Incorrect
+            <p class="div-erreur-password" style="display:none; color:red;">
+            Le Mot De Passe Ou Email Sont Incorrect
             </p>
         </div>
 
-        <button class="btn-creer-compte">Connexion</button>
+        <button type="submit" class="btn-creer-compte">Connexion</button>
       </form>
+      
+      <div style="text-align: center; margin-top: 20px;">
+        <p style="color: #666;">Pas encore de compte ? 
+          <a href="/auth/register" style="color: #007bff; text-decoration: none; font-weight: 500;">S'inscrire</a>
+        </p>
+        <a href="/" style="color: #666; text-decoration: none; font-size: 14px;">← Retour à l'accueil</a>
+      </div>
+      
+      <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const errorDiv = document.querySelector('.div-erreur-password');
+            
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: formData.get('email'),
+                        password: formData.get('password')
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    window.location.href = '/';
+                } else {
+                    errorDiv.textContent = data.message;
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Erreur de connexion';
+                errorDiv.style.display = 'block';
+            }
+        });
+      </script>
         
 
         <p class="p-question-avoir-compte">
