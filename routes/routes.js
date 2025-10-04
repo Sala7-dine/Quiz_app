@@ -36,5 +36,9 @@ router.post('/save-question', async (req, res) => {
     const controller = new QuestionController(req, res);
     await controller.postQuestion(req, res);
 });
+router.get('/admin/questions', async (req, res) => {
+    const controller = new QuestionController(req, res);
+    await controller.listQuestions(req, res);
+});
 
 module.exports = router;

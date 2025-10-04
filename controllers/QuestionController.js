@@ -36,6 +36,22 @@ class QuestionController extends BaseController {
         }
     }
 
+    async listQuestions(req, res) {
+        try {
+            const themes = await QuestionModel.getAllThemes();
+            const themeId = req.query.theme_id; 
+            let questions = [];
+
+            if (themeId) {
+                questions = await QuestionModel.getByTheme(themeId);
+            }
+
+            res.render('admin/list_questions', { themes, questions, selectedTheme: themeId });
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
+
 }
 
 module.exports = QuestionController;

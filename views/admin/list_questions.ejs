@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Liste des Questions</title>
+  <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+  <h1>Liste des Questions</h1>
+
+  <!-- اختيار الـ theme -->
+  <form method="GET" action="/admin/questions">
+    <label for="theme">Choisir un thème :</label>
+    <select name="theme_id" id="theme" onchange="this.form.submit()">
+      <option value="">-- Sélectionnez un thème --</option>
+      <% themes.forEach(theme => { %>
+        <option value="<%= theme.id %>" <%= selectedTheme == theme.id ? 'selected' : '' %>>
+          <%= theme.titre %>
+        </option>
+      <% }) %>
+    </select>
+  </form>
+
+  <!-- عرض الأسئلة -->
+  <% if (questions.length > 0) { %>
+    <table border="1" cellpadding="8" cellspacing="0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Question</th>
+          <th>Options</th>
+          <th>Bonne Réponse</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% questions.forEach(q => { %>
+          <tr>
+            <td><%= q.id %></td>
+            <td><%= q.question %></td>
+            <td>
+              <% 
+                let opts = [];
+                try {
+                  opts = JSON.parse(q.options);
+                } catch (err) {
+                  opts = [q.options]; // fallback إذا ماكانتش JSON
+                }
+              %>
+              <% opts.forEach((opt, i) => { %>
+                <div><%= i + 1 %>. <%= opt %></div>
+              <% }) %>
+            </td>
+            <td><%= q.correct_answer %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } else if (selectedTheme) { %>
+    <p>Aucune question trouvée pour ce thème.</p>
+  <% } %>
+</body>
+</html>
