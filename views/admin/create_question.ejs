@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Create Question</title>
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <header>
+            <h1>Créer une Question</h1>
+        </header>
+
+        <main>
+         <form class="question-form" action="/save-question" method="POST">
+    <!-- Question -->
+    <div class="form-group">
+        <label for="question">Question</label>
+        <textarea id="question" name="question" placeholder="Tapez votre question ici..." required></textarea>
+    </div>
+
+           <!-- Thème -->
+    <div class="form-group">
+        <label for="themeSelect">Choisir un thème existant</label>
+        <select id="themeSelect" name="theme_id">
+            <option value="">-- Sélectionnez un thème --</option>
+            <% themes.forEach(theme => { %>
+                <option value="<%= theme.id %>"><%= theme.titre %></option>
+            <% }) %>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="newTheme">Ou ajouter un nouveau thème</label>
+        <input type="text" id="newTheme" name="newTheme" placeholder="Nouvelle catégorie">
+    </div>
+
+      <!-- Options -->
+    <div class="form-group options-group">
+        <label>Options</label>
+        <div class="option">
+            <input type="radio" name="correct" value="1" required>
+            <input type="text" name="option1" placeholder="Option 1" required>
+        </div>
+        <div class="option">
+            <input type="radio" name="correct" value="2">
+            <input type="text" name="option2" placeholder="Option 2" required>
+        </div>
+        <div class="option">
+            <input type="radio" name="correct" value="3">
+            <input type="text" name="option3" placeholder="Option 3" required>
+        </div>
+        <div class="option">
+            <input type="radio" name="correct" value="4">
+            <input type="text" name="option4" placeholder="Option 4" required>
+        </div>
+    </div>
+
+    <button type="submit">Enregistrer la question</button>
+</form>
+
+
+        </main>
+    </div>
+</body>
+
+</html>
