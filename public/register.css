@@ -1,0 +1,129 @@
+/* Material icons */
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Body */
+body {
+    background-color: #A9DEF5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container */
+.container {
+    background-color: #fff;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 400px;
+}
+
+/* Title */
+.container .title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    text-align: center;
+    color: #333;
+}
+
+/* Form Divs */
+.container div {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+/* Labels */
+.container span {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Input fields */
+.container input {
+    width: 100%;
+    padding: 12px 40px 12px 40px; /* default padding for left/right icons */
+    border: 1px solid #4ec5f9;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* Icons left/right */
+.icon-left {
+    position: absolute;
+    left: 12px;
+    top: 36px;
+    font-size: 22px;
+    color: #888;
+    cursor: pointer;
+}
+
+.icon-right {
+    position: absolute;
+    right: 12px;
+    top: 36px;
+    font-size: 22px;
+    color: #888;
+    cursor: pointer;
+}
+
+/* Error messages */
+.error-input-utilisateur,
+.error-input-email,
+.div-erreur-password {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none; /* hide by default */
+}
+
+/* Button */
+.btn-creer-compte {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4ec5f9;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-creer-compte:hover {
+    background-color: #23a9e3;
+}
+
+/* Question text */
+.p-question-avoir-compte {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 15px;
+    color: #555;
+}
+
+.p-question-avoir-compte a {
+    color: #30afe6;
+    text-decoration: none;
+}
+
+.p-question-avoir-compte a:hover {
+    text-decoration: underline;
+}

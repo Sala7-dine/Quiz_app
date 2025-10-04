@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/register.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <title>Register</title>
+</head>
+
+<body>
+    <div class="container">
+        <p class="title">Sign Up</p>
+        <form method="POST" action="/add">
+
+               <!-- Username -->
+        <div class="div-utilisateur">
+            <span class="span-utilisateur">Entrez Votre Nom d’Utilisateur</span>
+            <span class="material-symbols-outlined icon-left">
+                account_circle
+            </span>
+            <input name="username" class="input-utilisateur" type="text" placeholder="Exemple: Fouad">
+            <p class="error-input-utilisateur">Nom Utilisateur Incorrect</p>
+        </div>
+
+        <!-- Email -->
+        <div class="div-email">
+            <span class="span-email">Entrez Votre Email</span>
+            <span class="material-symbols-outlined icon-left">
+                mail
+            </span>
+            <input name="email" class="input-email"  type="email" placeholder="Exemple: Fouad@gmail.com">
+            <p class="error-input-email">Ce Email Déjà Utilisé</p>
+        </div>
+
+        <!-- Password -->
+        <div class="div-password">
+            <span class="span-password">Entrez Votre Mot De Passe</span>
+
+            <!-- lock icon left -->
+            <span class="material-symbols-outlined icon-left">
+                lock
+            </span>
+
+            <input class="input-password" name="password" type="password" placeholder="●●●●●●●●●●">
+
+            <!-- visibility icon right -->
+            <span class="material-symbols-outlined icon-right">
+                visibility
+            </span>
+
+            <p class="div-erreur-password">
+                Veuillez Corriger Les Erreurs Suivantes:
+                * Le mot de passe doit contenir au moins 8 caractères
+                * Le mot de passe doit contenir au moins un chiffre
+            </p>
+        </div>
+
+        <button class="btn-creer-compte">Créer Compte</button>
+        </form>
+     
+
+        <p class="p-question-avoir-compte">
+            Vous Avez Déjà Un Compte?
+            <a href="login">Sign in</a>
+        </p>
+    </div>
+</body>
+</html>

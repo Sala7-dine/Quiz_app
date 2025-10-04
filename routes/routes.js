@@ -3,6 +3,8 @@ const router = express.Router();
 const HomeController = require('../controllers/HomeController');
 const QuizController = require("../controllers/QuizController");
 const AuthController = require("../controllers/AuthController");
+const AuthController = require('../controllers/AuthController');
+
 
 router.get('/', async (req, res) => {
 
@@ -15,7 +17,27 @@ router.get('/quiz', async (req, res) => {
 
     const controller = new QuizController(req, res);
     await controller.getQuiz(req, res);
+});
+// router.post('/add',async (req, res) => {
+//     const controller = new HomeController(req, res);
+//     await controller.postUser(req, res);
+// });
 
+router.post('/add',async (req, res) => {
+    const controller = new AuthController(req, res);
+    await controller.postUser(req, res);
+});
+
+router.post('/connexion',async (req, res) => {
+    const controller = new AuthController(req, res);
+    await controller.loginUser(req, res);
+});
+
+router.get('/register', (req, res) => {
+  res.render('auth/register');
+});
+router.get('/login', (req, res) => {
+  res.render('auth/login');
 });
 
 router.get('/dashboard', (req, res) => {

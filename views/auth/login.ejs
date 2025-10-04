@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/register.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <title>login</title>
+</head>
+
+<body>
+    <div class="container">
+        <p class="title">Sign In</p>
+
+      <form action="/connexion" method="POST">
+        <!-- Email -->
+        <div class="div-email">
+            <span class="span-email">Entrez Votre Email</span>
+            <span class="material-symbols-outlined icon-left">
+                mail
+            </span>
+            <input class="input-email" name="email" type="email" placeholder="Exemple: Fouad@gmail.com">
+            <p class="error-input-email">Ce Email Déjà Utilisé</p>
+        </div>
+
+        <!-- Password -->
+        <div class="div-password">
+            <span class="span-password">Entrez Votre Mot De Passe</span>
+
+            <!-- lock icon left -->
+            <span class="material-symbols-outlined icon-left">
+                lock
+            </span>
+
+            <input class="input-password" name="password" type="password" placeholder="●●●●●●●●●●">
+
+            <!-- visibility icon right -->
+            <span class="material-symbols-outlined icon-right">
+                visibility
+            </span>
+
+            <p class="div-erreur-password">
+            Le Mot De Pass Ou Bien Email Sont Incorrect
+            </p>
+        </div>
+
+        <button class="btn-creer-compte">Connexion</button>
+      </form>
+        
+
+        <p class="p-question-avoir-compte">
+            Vous N'avez pas Un Compte?
+            <a href="register">Sign up</a>
+        </p>
+    </div>
+</body>
+</html>

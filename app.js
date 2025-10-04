@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require("express-session");
 const path = require('path');
 const dotenv = require('dotenv');
 const session = require('express-session');
@@ -50,3 +51,4 @@ app.use((req, res, next) => {
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
+

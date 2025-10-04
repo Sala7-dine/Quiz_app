@@ -14,6 +14,7 @@ class HomeController extends BaseController {
     async postUser(req, res) {
         try {
             const userInfo = req.body;
+            console.log(req.bdoy);
             await UserModel.create(userInfo);
             res.redirect('/');
         } catch (error) {
