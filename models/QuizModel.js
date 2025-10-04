@@ -15,7 +15,6 @@ class QuizModel {
 
         try {
             const [rows] = await pool.query("SELECT * FROM questions where theme_id = ?" , [theme]);
-            // Convertir multi_question en multiQuestion pour la cohérence avec le front-end
             return rows.map(row => ({
                 ...row,
                 multiQuestion: row.multi_question,
@@ -39,11 +38,13 @@ class QuizModel {
     static async saveGameResult(gameData) {
         try {
             const { pseudo, theme_id, score, total_questions, time_spent, answers } = gameData;
-            await pool.query(
+            
+            const [result] = await pool.query(
                 "INSERT INTO games (pseudo, theme_id, score, total_questions, time_spent, answers) VALUES (?, ?, ?, ?, ?, ?)", 
                 [pseudo, theme_id, score, total_questions, time_spent, JSON.stringify(answers)]
             );
-            return { success: true };
+            
+            return { success: true, insertId: result.insertId };
         } catch (error) {
             throw error;
         }

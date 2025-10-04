@@ -16,9 +16,21 @@ class QuizController extends BaseController {
     async getAllQuestions(req , res) {
 
         try {
-            const data = await QuizModel.getAllQuestions(req.query.choice);
-            console.log(data);
-            this.render('home/questions' , {questions : data});
+            const themeId = req.query.choice;
+            const data = await QuizModel.getAllQuestions(themeId);
+            
+            // Vérifier si des questions existent
+            if (!data || data.length === 0) {
+                return res.status(404).render('home/quiz', { 
+                    themes: await QuizModel.getAllTheme(),
+                    error: 'Aucune question trouvée pour ce thème.' 
+                });
+            }
+
+            this.render('home/questions' , {
+                questions: data,
+                themeId: themeId
+            });
 
         }catch(err) {
             this.handleError(err);
@@ -30,23 +42,26 @@ class QuizController extends BaseController {
     async saveQuizResult(req, res) {
         try {
             const { pseudo, theme_id, score, total_questions, time_spent, answers } = req.body;
-            
-            if (!pseudo || !theme_id || score === undefined || !total_questions) {
+
+            const normalizedPseudo = pseudo ? pseudo.toLowerCase().trim() : null;
+
+            if (!normalizedPseudo || !theme_id || score === undefined || !total_questions) {
                 return res.status(400).json({ success: false, message: 'Données manquantes' });
             }
 
-            await QuizModel.saveGameResult({
-                pseudo,
+            const gameData = {
+                pseudo: normalizedPseudo,
                 theme_id: parseInt(theme_id),
                 score: parseInt(score),
                 total_questions: parseInt(total_questions),
                 time_spent: parseInt(time_spent) || 0,
                 answers: answers || []
-            });
+            };
+            
+            const result = await QuizModel.saveGameResult(gameData);
 
             res.json({ success: true, message: 'Résultat sauvegardé avec succès' });
         } catch (error) {
-            console.error('Erreur lors de la sauvegarde:', error);
             res.status(500).json({ success: false, message: 'Erreur serveur' });
         }
     }
@@ -58,10 +73,12 @@ class QuizController extends BaseController {
                 return res.status(400).json({ success: false, message: 'Pseudo manquant' });
             }
 
-            const history = await QuizModel.getGameHistory(pseudo);
+            const normalizedPseudo = pseudo.toLowerCase().trim();
+            
+            const history = await QuizModel.getGameHistory(normalizedPseudo);
+            
             res.json({ success: true, data: history });
         } catch (error) {
-            console.error('Erreur lors de la récupération de l\'historique:', error);
             res.status(500).json({ success: false, message: 'Erreur serveur' });
         }
     }
@@ -71,7 +88,6 @@ class QuizController extends BaseController {
             const topScores = await QuizModel.getTopScores(10);
             res.json({ success: true, data: topScores });
         } catch (error) {
-            console.error('Erreur lors de la récupération du classement:', error);
             res.status(500).json({ success: false, message: 'Erreur serveur' });
         }
     }

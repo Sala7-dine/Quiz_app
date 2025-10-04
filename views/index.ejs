@@ -5,15 +5,63 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<h1>🎯 Quiz App - Accueil</h1>
 
 <div style="text-align: center; margin: 20px 0;">
-    <a href="/quiz" style="display: inline-block; margin: 10px; padding: 15px 30px; background: hsl(222.2 47.4% 11.2%); color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+    <a href="/quiz" id="quiz-link" style="display: inline-block; margin: 10px; padding: 15px 30px; background: hsl(222.2 47.4% 11.2%); color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
         🎮 Jouer au Quiz
     </a>
-    <a href="/dashboard" style="display: inline-block; margin: 10px; padding: 15px 30px; background: hsl(45 93% 47%); color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+    <a href="/auth/login" id="auth-link" style="display: inline-block; margin: 10px; padding: 15px 30px; background: hsl(262.1 83.3% 57.8%); color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
+        👤 Se connecter
+    </a>
+    <a href="/dashboard" id="dashboard-link" style="display: inline-block; margin: 10px; padding: 15px 30px; background: hsl(45 93% 47%); color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">
         📊 Dashboard
     </a>
+    <button onclick="logout()" id="logout-btn" style="display: none; margin: 10px; padding: 15px 30px; background: hsl(0 72% 51%); color: white; border: none; border-radius: 6px; font-weight: 500; cursor: pointer;">
+        🚪 Se déconnecter
+    </button>
 </div>
+
+<script>
+    // Vérifier l'état de l'authentification au chargement
+    document.addEventListener('DOMContentLoaded', async function() {
+        try {
+            const response = await fetch('/auth/check');
+            const result = await response.json();
+            
+            const statusMessage = document.getElementById('status-message');
+            const authLink = document.getElementById('auth-link');
+            const logoutBtn = document.getElementById('logout-btn');
+            
+        } catch (error) {
+            console.error('Erreur lors de la vérification de l\'authentification:', error);
+            document.getElementById('status-message').innerHTML = 'Erreur de connexion';
+        }
+    });
+
+    // Fonction de déconnexion
+    async function logout() {
+        try {
+            const response = await fetch('/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                alert('Déconnexion réussie');
+                location.reload(); 
+            } else {
+                alert('Erreur lors de la déconnexion');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la déconnexion:', error);
+            alert('Erreur de connexion');
+        }
+    }
+</script>
 
 </body>
 </html>

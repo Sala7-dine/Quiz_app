@@ -3,6 +3,7 @@ const router = express.Router();
 const HomeController = require('../controllers/HomeController');
 const QuizController = require("../controllers/QuizController");
 const AuthController = require("../controllers/AuthController");
+const { requireAuth, optionalAuth } = require('../middleware/auth');
 
 
 
@@ -13,53 +14,80 @@ router.get('/', async (req, res) => {
 
 });
 
-router.get('/quiz', async (req, res) => {
+// ========== Routes d'Authentification (publiques) ==========
 
-    const controller = new QuizController(req, res);
-    await controller.getQuiz(req, res);
-});
-// router.post('/add',async (req, res) => {
-//     const controller = new HomeController(req, res);
-//     await controller.postUser(req, res);
-// });
-
-router.post('/add',async (req, res) => {
+// Page de connexion
+router.get('/auth/login', (req, res) => {
     const controller = new AuthController(req, res);
+    controller.showLoginPage(req, res);
+});
+
+// Page d'inscription
+router.get('/auth/register', (req, res) => {
+    const controller = new AuthController(req, res);
+    controller.showRegisterPage(req, res);
+});
+
+// Connexion utilisateur
+router.post('/auth/login', async (req, res) => {
+    const controller = new AuthController(req, res);
+    await controller.login(req, res);
+});
+
+// Inscription utilisateur
+router.post('/auth/register', async (req, res) => {
+    const controller = new AuthController(req, res);
+    await controller.register(req, res);
+});
+
+// Déconnexion utilisateur
+router.post('/auth/logout', (req, res) => {
+    const controller = new AuthController(req, res);
+    controller.logout(req, res);
+});
+
+// Vérifier l'authentification
+router.get('/auth/check', (req, res) => {
+    const controller = new AuthController(req, res);
+    controller.checkAuth(req, res);
+});
+
+// Inscription utilisateur (depuis page d'accueil)
+router.post('/add',async (req, res) => {
+    const controller = new HomeController(req, res);
     await controller.postUser(req, res);
 });
 
-router.post('/connexion',async (req, res) => {
-    const controller = new AuthController(req, res);
-    await controller.loginUser(req, res);
-});
+// ========== Routes Protégées ==========
 
-router.get('/register', (req, res) => {
-  res.render('auth/register');
-});
-router.get('/login', (req, res) => {
-  res.render('auth/login');
-});
-
-router.get('/dashboard', (req, res) => {
+// Route protégée - nécessite authentification
+router.get('/dashboard', requireAuth, (req, res) => {
     res.render('dashboard');
 });
 
-
-router.get('/quiz/questions' , async (req , res) => {
-
+// Route protégée - nécessite authentification
+router.get('/quiz/questions', requireAuth, async (req , res) => {
     try{
         const controller = new QuizController(req , res);
         await controller.getAllQuestions(req , res);
-
     }catch (err) {
         throw err;
     }
 });
 
+// Route protégée - page de sélection des thèmes
+router.get('/quiz', requireAuth, async (req, res) => {
+    try {
+        const controller = new QuizController(req, res);
+        await controller.getQuiz(req, res);
+    } catch (err) {
+        throw err;
+    }
+});
 
 
-// Route pour sauvegarder les résultats du quiz
-router.post('/quiz/save-result', async (req, res) => {
+// Routes protégées pour les résultats de quiz
+router.post('/quiz/save-result', requireAuth, async (req, res) => {
     try {
         const controller = new QuizController(req, res);
         await controller.saveQuizResult(req, res);
@@ -68,8 +96,8 @@ router.post('/quiz/save-result', async (req, res) => {
     }
 });
 
-// Route pour récupérer l'historique d'un joueur
-router.get('/quiz/history', async (req, res) => {
+// Route protégée pour récupérer l'historique d'un joueur
+router.get('/quiz/history', requireAuth, async (req, res) => {
     try {
         const controller = new QuizController(req, res);
         await controller.getHistory(req, res);
