@@ -1,7 +1,7 @@
 const express = require('express');
-const session = require("express-session");
 const path = require('path');
 const dotenv = require('dotenv');
+const session = require('express-session');
 const { connectDB } = require('./config/database');
 
 dotenv.config();
@@ -9,19 +9,20 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT;
 
+// Configuration des sessions
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'quiz-app-default-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false, // true en production avec HTTPS
+        maxAge: 24 * 60 * 60 * 1000 // 24 heures
+    }
+}));
+
 // Middleware pour parser les requêtes POST (body)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-//session
-app.use(express.json());
-
-app.use(session({
-  secret: "FouadSalah@QuizzApp#123456", 
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } 
-}));
 
 // Configuration des vues EJS
 app.set('view engine', 'ejs');
@@ -35,8 +36,7 @@ connectDB();
 
 // Chargement des routes
 const routes = require('./routes/routes');
-app.use('/', routes); // Monte les routes à la racine (ou changez le prefixe si besoin)
-app.use('/add' , routes);
+app.use('/', routes);
 
 // Gestion des erreurs 404
 app.use((req, res, next) => {
