@@ -19,8 +19,6 @@ class QuestionModel {
       const correct_answer = parseInt(questionInfo.correct);
 
       let themeId = questionInfo.theme_id;
-
-     
       if ((!themeId || themeId === '') && questionInfo.newTheme) {
         const [result] = await pool.query(
           "INSERT INTO themes (titre) VALUES (?)",
@@ -28,13 +26,9 @@ class QuestionModel {
         );
         themeId = result.insertId;
       }
-
-      
       if (!themeId) {
         throw new Error("Aucun thème n'a été sélectionné ou créé.");
       }
-
-      
       await pool.query(
         "INSERT INTO questions (theme_id, question, options, correct_answer) VALUES (?, ?, ?, ?)",
         [themeId, questionInfo.question, optionsJSON, correct_answer]
